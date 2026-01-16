@@ -13,8 +13,8 @@ jq -s 'reduce .[] as $o ({}; . * $o)' "${CUR}/rencontres/"*.json > "${CUR}/renco
 jq '[to_entries | .[] | .value |  [.[] | select(.clos|not)]  | first | values ] | sort_by(.isodate)' "${CUR}/rencontres.json" > "${CUR}/coming.json"
 extract-home
 
-upd_games="$(LC_ALL=fr_FR ls -lGgt --time-style="+#%e %b à %H:%M#" "${DB}/rencontres/"*.json | head -n 1 | cut -d# -f 2)"
-upd_ranks="$(LC_ALL=fr_FR ls -lGgt --time-style="+#%e %b à %H:%M#" "${CUR}/ranking/"*.json | head -n 1 | cut -d# -f 2)"
+upd_games="$(LC_ALL=fr_FR ls -lGgt --time-style="+#%e %b %Y à %H:%M#" "${DB}/rencontres/"*.json | head -n 1 | cut -d# -f 2)"
+upd_ranks="$(LC_ALL=fr_FR ls -lGgt --time-style="+#%e %b %Y à %H:%M#" "${CUR}/ranking/"*.json | head -n 1 | cut -d# -f 2)"
 
 jq -s '{"competitions": .[0],
         "rankings": .[1],
