@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+. "$(dirname "$0")/setup-env.sh"
+[ -f "${DB}/competitions.json" ] || fetch-competitions
+jq '.data[] | select((.structure.code == "75" or .structure.code == "FFRS") and (.libelle|endswith(" U13")|not)) | .phases[].id' "$DB/competitions.json"

@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+. "$(dirname "$0")/setup-env.sh"
+
+make-rankings
+
+## rencontres
+rm -rf "${CUR}/rencontres"
+mkdir -p "${CUR}/rencontres"
+for x in "${DB}/rencontres/"*.json; do
+    cat "${x}" | extract-rencontres > "${CUR}/rencontres/$(basename "$x")"
+done
+jq -s 'reduce .[] as $o ({}; . * $o)' "${CUR}/rencontres/"*.json > "${CUR}/rencontres.json"
+jq '[to_entries | .[] | .value |  [.[] | select(.clos|not)]  | first | values ] | sort_by(.isodate)' "${CUR}/rencontres.json" > "${CUR}/coming.json"
+extract-home
+
+jq -s '{"competitions": .[0], "rankings": .[1], "rencontres": .[2], "coming": .[3], "home": .[4]}' \
+    "${CUR}/rankings_meta.json"\
+    "${CUR}/rankings.json"\
+    "${CUR}/rencontres.json"\
+    "${CUR}/coming.json"\
+    "${CUR}/home.json"\
+    > "${CUR}/data.json"

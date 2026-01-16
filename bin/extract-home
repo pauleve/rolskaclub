@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+. "$(dirname "$0")/setup-env.sh"
+jq '.data[] | select(.infosRencontre.lieu_pratique.id == '${LIEU_ID}') |
+    .receveur.id as $lid | .visiteur.id as $vid | {id,
+        "local": .receveur.libelle_court,
+        "visiteur": .visiteur.libelle_court,
+        "our": (if .receveur.club.code == "'$CLUB_CODE'" then "local" else "visiteur" end),
+        "score": {
+            "local": (.score[] | select(.equipe_id == $lid) | .score),
+            "visiteur": (.score[] | select(.equipe_id == $vid) | .score)},
+        "date_rencontre": .infosRencontre.date_rencontre,
+        "isodate": (.infosRencontre.date_rencontre|strptime("%d/%m/%Y %H:%M")|todate),
+        "lieu": {
+            "id": .infosRencontre.lieu_pratique.id,
+            "libelle": .infosRencontre.lieu_pratique.libelle,
+            "libelle_complet": .infosRencontre.lieu_pratique.libelle_complet,
+        },
+        "phase_id": .infosRencontre.phase_parametrage.phase_id,
+        tour,
+        etat,
+        clos,
+        forfait}
+' ${DB}/rencontres/*.json\
+    | jq -s '.| sort_by(.isodate)' > ${CUR}/home.json

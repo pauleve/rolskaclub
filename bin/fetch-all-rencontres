@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+. "$(dirname "$0")/setup-env.sh"
+jq -r '.[] | ("fetch-rencontres " + (.competition_id|tostring) + " " + (.phase_id|tostring))' "${CUR}/rankings_meta.json" | sh

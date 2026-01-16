@@ -1,0 +1,2 @@
+publish:
+	rsync -c --progress --delete -rd --perms --chmod=o+rX pub/ /web/

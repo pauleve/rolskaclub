@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+. "$(dirname "$0")/setup-env.sh"
+mkdir -p "${OUT}"
+set -x
+jinja -E SAISON -E NAME -E LOGO_LARGE -D stylestamp $(md5sum "${BASE}/pub/static/style.css" | cut -f1 -d' ') -d "${CUR}/data.json" "${BASE}/templates/dashboard.j2" -o "${OUT}/dashboard.html"

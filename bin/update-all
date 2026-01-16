@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+. "$(dirname "$0")/setup-env.sh"
+rm -rf "${CUR}/ranking"
+mkdir -p "${CUR}/ranking"
+fetch-competitions
+for phase in $(list-competitions); do
+    in="${DB}/ranking/${phase}.json"
+    out="${CUR}/ranking/${phase}.json"
+    outm="${CUR}/ranking/${phase}_meta.json"
+    if [ ! -f "${in}" ] || [ -f "${out}" ]; then
+        fetch-ranking ${phase}
+        [ -f "${out}" ] || sleep 1
+    fi
+    cat "${in}" | extract-ranking > "${out}"
+    if [ -s "${out}" ]; then
+        echo ${phase}
+        extract-ranking-meta ${phase} > ${outm}
+    else
+        rm "${out}"
+    fi
+done
+make-rankings
+fetch-all-rencontres

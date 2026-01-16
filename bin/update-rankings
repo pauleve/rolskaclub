@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+. "$(dirname "$0")/setup-env.sh"
+for phase in $(list-competitions); do
+    in="${DB}/ranking/${phase}.json"
+    out="${CUR}/ranking/${phase}.json"
+    outm="${CUR}/ranking/${phase}_meta.json"
+    if [ -f "${out}" ]; then
+        echo ${phase}
+        fetch-ranking ${phase}
+        cat "${in}" | extract-ranking > "${out}"
+        extract-ranking-meta ${phase} > ${outm}
+    fi
+done

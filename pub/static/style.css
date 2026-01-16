@@ -1,0 +1,110 @@
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto'), local('Roboto-Regular'), url(https://fonts.gstatic.com/s/roboto/v15/CWB0XYA8bzo0kSThX0UTuA.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+body {
+    font-family: 'Roboto', sans-serif;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: left top;
+/*    background-size: 100%; */
+}
+p.src {
+    font-size: small;
+    margin: 0;
+    padding: 0;
+}
+span.our {
+    font-weight: bold;
+}
+tr.our {
+    background-color: Thistle;
+}
+tr.our td {
+    font-weight: bold;
+}
+h3, h4 {
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+div.block {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 2em;
+}
+p.link {
+    font-size: small;
+    padding-top: 0px;
+    margin-top: 0;
+}
+div.content {
+    background-color: rgba(255, 255, 255, 0.9);
+    margin: 2em;
+}
+
+table.ranking {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+table.ranking th {
+    font-size: small;
+}
+table.ranking td {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+table.ranking tr.our td.health {
+    font-weight: normal;
+}
+table.coming td.phase {
+    text-align: right;
+    color: gray;
+    padding-right: 1em;
+}
+table.coming td.location {
+    padding-left: 1em;
+}
+table.games td.teams {
+    border-left: 1px solid black;
+    padding-left: 0.3ex;
+}
+table.games {
+    border-spacing: 0.3ex 1ex;
+}
+table.games a {
+    text-decoration: none;
+}
+
+span.time {
+    color: gray;
+}
+
+div:target {
+    background-color: rgba(255,255,200,0.5);
+}
+
+@media screen and (max-width:1024px) {
+    body {
+        background-size: 100%;
+        background-position: center bottom;
+        background-position-y: 60vh;
+        background-attachment: fixed;
+    }
+    div.content {
+        margin: 0.5ex;
+    }
+    div.block {
+        display: block;
+        margin: 0px;
+    }
+}
+
+p.footer {
+    padding-top: 3em;
+    font-size: small;
+    text-align: center;
+    padding-bottom: 1em;
+}

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+. "$(dirname "$0")/setup-env.sh"
+jq -s '.' "${CUR}/ranking/"*_meta.json > "${CUR}/rankings_meta.json"
+jq '{(. | input_filename | split("/")[-1] | split(".")[0]): .}' "${CUR}/ranking/"*[0-9].json  | jq -s 'reduce .[] as $o ({}; . * $o)' > "${CUR}/rankings.json"

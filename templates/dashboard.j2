@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard {{ NAME }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../static/style.css?{{ stylestamp }}" />
+    <link rel="stylesheet" href="../static/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="icon" type="image/jpeg" href="https://www.spuc-roller.com/joomla/images/logos/Logo%20Maohis%20JPG.jpg">
+    <style type="text/css">
+    body {
+        background-image: url('{{ LOGO_LARGE }}');
+    }
+    h1, h2 {
+        color: #4B0150;
+    }
+    </style>
+</head>
+<body>
+<div class="content">
+
+<h1>Le dashboard des Maohis</h1>
+
+
+<h2>Saison {{ SAISON|int -1 }}/{{ SAISON }}</h2>
+
+{%- macro goup() -%}
+<p><a href="#top"><i class="fa fa-angle-double-up" aria-hidden="true"></i></a></p>
+{%- endmacro -%}
+{%- macro hl(data,b,link_phase=None) -%}
+    {%- if b -%}
+    {%- if link_phase %}<a href="#rencontres-{{ link_phase }}">{% endif -%}
+    <span class="our">{{ data }}</span>
+    {%- if link_phase %}</a>{% endif -%}
+    {% else %}{{ data }}{% endif -%}
+{%- endmacro %}
+{%- macro ville(label) -%}
+{{ label[6:]|trim('-')|trim }}
+{%- endmacro -%}
+{%- macro club(label) -%}
+{{ label[6:]|trim('-')|replace(" - "," ")|trim }}
+{%- endmacro -%}
+{%- macro date(label) -%}
+{% set p = label.split() %}
+{% set d = p[0].split('/') %}
+<span class="date">{{ d[:2]|join('/') }}</span><br><span class="time">{{ p[1] }}</span>
+{%- endmacro -%}
+{% macro render_ranking(r) -%}
+<table class="ranking">
+    <tr>
+        <th></th>
+        <th>Poule {{ r.poule }}</th>
+        <th>Pts</th>
+        <th>MJ</th>
+        <th>Forme</th>
+    </tr>
+    {%-for e in r.ranking %}
+    <tr {% if e.our %}class="our"{% endif %}>
+        <td style="text-align: right">{{ e.position }}&nbsp;</td>
+        <td class="team">{{ e.equipe[8:] }}</td>
+        <td style="text-align: right">{{ e.pts }}</td>
+        <td style="text-align: right">{{ e.MJ }}</td>
+        <td class="health">{{
+            e.H[-5:]|replace("V","&#x1F7E2;")|replace("D","&#x1F534;")|replace("N","&#x26AB;")|safe }}</td>
+    </tr>
+    {%- endfor %}
+</table>
+{%- endmacro -%}
+{% macro render_game(game,show_loc=False,link_phase=None) %}
+        <td>
+            <a href="https://rolskanet.fr/sportif/live/{{ game.id }}">
+                {%- if game.forfait %}&#x274C;
+                {%- elif game.clos -%}
+                    {%- if game.score.local == game.score.visiteur -%}&#x26AB;
+                    {% elif (game.our == "local" and game.score.local > game.score.visiteur) 
+                        or (game.our == "visiteur" and game.score.visiteur > game.score.local) %}&#x1F7E2;
+                    {% else %}&#x1F534;{% endif %}
+                {% else %}
+                    <i class="fa fa-external-link" aria-hidden="true"></i>
+                {% endif -%}
+            </a>
+        </td>
+        <td>
+                {{ date(game.date_rencontre) }}
+            {% if show_loc %}
+              <span class="location">{{ ville(game.lieu.libelle_complet).split('-')[0]|title }}</span>
+            {% endif %}
+        </td>
+        <td class="teams">
+            {{ hl(club(game.local),game.our == "local",link_phase=link_phase) }}
+            <br>
+            {{ hl(club(game.visiteur),game.our == "visiteur",link_phase=link_phase) }}
+        </td>
+        {% if game.clos and not game.forfait %}
+        <td>
+            {{ hl(game.score.local,game.our == "local") }}<br>{{ hl(game.score.visiteur,game.our == "visiteur") }}
+        </td>
+        {% endif %}
+{% endmacro %}
+
+
+<h3>Prochains matchs</h3>
+<table class="games coming">
+{% for game in coming %}
+    <tr>
+        {{ render_game(game,show_loc=True,link_phase=game.phase_id) }}
+    </tr>
+{% endfor %}
+</table>
+<p class="link"><a href="#home"><i class="fa fa-angle-double-down" aria-hidden="true"></i>
+    Prochains matchs à domicile</a></p>
+
+<h3>Classements</h3>
+<p class="src">Source: <a href="https://rolskanet.fr/sportif/synthese/classements/LH">Rolskanet</a></p>
+
+{%- for struct in ["FED", "LIG"] -%}
+{% for rd in competitions|selectattr("structure", "eq", struct)|rejectattr("type", "eq", "M")%}
+<div class="block">
+    <h4>{{ rd.phase }}</h4>
+    {{ render_ranking(rankings[rd.phase_id|string]) }}
+    <p class="link"><a href="#rencontres-{{ rd.phase_id }}">Liste des rencontres</a></p>
+</div>
+{% endfor %}
+{%- endfor -%}
+{{ goup() }}
+
+
+<div class="tight" id="home">
+<h3>Prochains matchs à domicile</h3>
+
+<table class="games">
+    {% for game in home|rejectattr("clos") %}
+    <tr>
+        {{ render_game(game,link_phase=game.phase_id) }}
+    </tr>
+    {% endfor -%}
+</table>
+</div>
+{{ goup() }}
+
+<h3>Rencontres</h3>
+<p class="src">Source: <a href="https://rolskanet.fr/sportif/synthese/rencontres/LH">Rolskanet</a></p>
+
+{%- for struct in ["FED", "LIG"] -%}
+{% for c in competitions|selectattr("structure", "eq", struct)|rejectattr("type", "eq", "M") %}
+<div class="block" id="rencontres-{{ c.phase_id }}">
+<h4>{{ c.phase }}</h4>
+<table class="games">
+    {%- for game in rencontres[c.phase_id|string] %}
+    <tr>
+        <td style="text-align: right">J{{ game.tour }}</td>
+        {{ render_game(game) }}
+    </tr>
+    {% endfor -%}
+</table>
+</div>
+
+{% endfor %}
+{%- endfor -%}
+
+{{ goup() }}
+
+
+<p class="footer">
+    <a href="https://github.com/pauleve/rolskaclub"><i class="fa fa-github" aria-hidden="true"></i> source code</a>
+</p>
+
+
+</div>
+</body>
+</html>

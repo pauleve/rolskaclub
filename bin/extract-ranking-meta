@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+. "$(dirname "$0")/setup-env.sh"
+P=$1
+cat "${DB}"/competitions.json | jq '.data[] | select(.phases[].id == '$P') | . as $c | (.phases[] | select(.id=='$P') | {
+        "competition": $c.libelle,
+        "competition_id": $c.id,
+        "structure": $c.structure.type,
+        "phase": .libelle,
+        "phase_id": .id,
+        "type": .type_phase})'

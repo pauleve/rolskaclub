@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+. "$(dirname "$0")/setup-env.sh"
+c=$1
+p=$2
+if [ -z "$p" ]; then
+    echo "$0 {competition_id} {phase_id}" >&2
+    exit 1
+fi
+A=$(($SAISON - 1))
+B=$SAISON
+# tour
+# poule_id
+Q='{"saison":'${SAISON}',"phase_id":'$p',"competition_id":'$c',
+    "dates":{"start_date":"01/09/'$A'","end_date":"30/08/'$B'"},
+    "equipe_term": "'$EQUIPE_TERM'",
+    "discipline_code": "LH", "order_by": "date_debut", "order_by_desc":null}'
+out="${DB}/rencontres/${c}_${p}.json"
+echo "${out}"
+rolscurl --header "Content-Type: application/json"\
+    --request POST --data "${Q}" \
+    ${BASEURL}/liste_rencontres --create-dirs --output "${out}"
