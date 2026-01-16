@@ -111,7 +111,8 @@
     Prochains matchs à domicile</a></p>
 
 <h3>Classements</h3>
-<p class="src">Source: <a href="https://rolskanet.fr/sportif/synthese/classements/LH">Rolskanet</a></p>
+<p class="src">Source: <a href="https://rolskanet.fr/sportif/synthese/classements/LH">Rolskanet</a>
+    en date du {{ update_time["rankings"] }}</p>
 
 {%- for struct in ["FED", "LIG"] -%}
 {% for rd in competitions|selectattr("structure", "eq", struct)|rejectattr("type", "eq", "M")%}
@@ -139,7 +140,8 @@
 {{ goup() }}
 
 <h3>Rencontres</h3>
-<p class="src">Source: <a href="https://rolskanet.fr/sportif/synthese/rencontres/LH">Rolskanet</a></p>
+<p class="src">Source: <a href="https://rolskanet.fr/sportif/synthese/rencontres/LH">Rolskanet</a>
+    en date du {{ update_time["games"] }}</p>
 
 {%- for struct in ["FED", "LIG"] -%}
 {% for c in competitions|selectattr("structure", "eq", struct)|rejectattr("type", "eq", "M") %}
