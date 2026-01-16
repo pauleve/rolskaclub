@@ -7,4 +7,4 @@ update-all:
 update-rankings:
 	./bin/update-rankings
 
-include Makefile.local
+-include Makefile.local
