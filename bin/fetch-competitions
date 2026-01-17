@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 . "$(dirname "$0")/setup-env.sh"
 set -x
-rolscurl ${BASEURL}/competitions?saison=$SAISON --create-dirs --output "${DB}/competitions.json"
+rolscurl "${BASEURL}/competitions?saison=$SAISON" --create-dirs --output "${DB}/competitions.json"

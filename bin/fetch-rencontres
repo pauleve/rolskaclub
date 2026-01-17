@@ -10,12 +10,12 @@ A=$(($SAISON - 1))
 B=$SAISON
 # tour
 # poule_id
-Q='{"saison":'${SAISON}',"phase_id":'$p',"competition_id":'$c',
-    "dates":{"start_date":"01/09/'$A'","end_date":"30/08/'$B'"},
-    "equipe_term": "'$EQUIPE_TERM'",
+Q='{"saison":'"${SAISON}"',"phase_id":'"$p"',"competition_id":'"$c"',
+    "dates":{"start_date":"01/09/'"$A"'","end_date":"30/08/'"$B"'"},
+    "equipe_term": "'"$EQUIPE_TERM"'",
     "discipline_code": "LH", "order_by": "date_debut", "order_by_desc":null}'
 out="${DB}/rencontres/${c}_${p}.json"
 echo "${out}"
 rolscurl --header "Content-Type: application/json"\
     --request POST --data "${Q}" \
-    ${BASEURL}/liste_rencontres --create-dirs --output "${out}"
+    "${BASEURL}/liste_rencontres" --create-dirs --output "${out}"

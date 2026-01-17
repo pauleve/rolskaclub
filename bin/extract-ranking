@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 . "$(dirname "$0")/setup-env.sh"
-jq '.data | to_entries | .[] | select(.value.data[].equipe.proprietaire.id == '$PROPRIETAIRE') | {"poule": .key+1, "final": .value.est_gele, "ranking": [.value.data[] | .participant_id as $p | {"position": .position, "equipe": .equipe.nom, "logo": .equipe.logo,
-        "our": .equipe.proprietaire.id == '$PROPRIETAIRE',
+jq '.data | to_entries | .[] | select(.value.data[].equipe.proprietaire.id == '"$PROPRIETAIRE"') | {"poule": .key+1, "final": .value.est_gele, "ranking": [.value.data[] | .participant_id as $p | {"position": .position, "equipe": .equipe.nom, "logo": .equipe.logo,
+        "our": .equipe.proprietaire.id == '"$PROPRIETAIRE"',
         "pts": .nombre_point,
         "MJ": .nombre_joues,
         "V": .nombre_victoires_sans_prolongation,

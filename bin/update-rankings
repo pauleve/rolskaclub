@@ -5,9 +5,9 @@ for phase in $(list-competitions); do
     out="${CUR}/ranking/${phase}.json"
     outm="${CUR}/ranking/${phase}_meta.json"
     if [ -f "${out}" ]; then
-        echo ${phase}
-        fetch-ranking ${phase}
+        echo "${phase}"
+        fetch-ranking "${phase}"
         cat "${in}" | extract-ranking > "${out}"
-        extract-ranking-meta ${phase} > ${outm}
+        extract-ranking-meta "${phase}" > ${outm}
     fi
 done

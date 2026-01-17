@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 . "$(dirname "$0")/setup-env.sh"
-jq '.data[] | select(.infosRencontre.lieu_pratique.id == '${LIEU_ID}') |
+jq '.data[] | select(.infosRencontre.lieu_pratique.id == '"${LIEU_ID}"') |
     .receveur.id as $lid | .visiteur.id as $vid | {id,
         "local": .receveur.libelle_court,
         "visiteur": .visiteur.libelle_court,
-        "our": (if .receveur.club.code == "'$CLUB_CODE'" then "local" else "visiteur" end),
+        "our": (if .receveur.club.code == "'"$CLUB_CODE"'" then "local" else "visiteur" end),
         "score": {
             "local": (.score[] | select(.equipe_id == $lid) | .score),
             "visiteur": (.score[] | select(.equipe_id == $vid) | .score)},
@@ -20,5 +20,5 @@ jq '.data[] | select(.infosRencontre.lieu_pratique.id == '${LIEU_ID}') |
         etat,
         clos,
         forfait}
-' ${DB}/rencontres/*.json\
-    | jq -s '.| sort_by(.isodate)' > ${CUR}/home.json
+' "${DB}/rencontres"/*.json\
+    | jq -s '.| sort_by(.isodate)' > "${CUR}/home.json"
